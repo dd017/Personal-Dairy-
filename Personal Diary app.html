@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Diary App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 100%;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .entry {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Personal Diary</h1>
+        <textarea id="diaryEntry" placeholder="Write your diary entry here..."></textarea>
+        <button id="saveButton">Save Entry</button>
+        <h2>Previous Entries</h2>
+        <div id="entries"></div>
+    </div>
+
+    <script>
+        document.getElementById('saveButton').addEventListener('click', saveEntry);
+
+        function saveEntry() {
+            const entryText = document.getElementById('diaryEntry').value;
+            if (entryText.trim()) {
+                const entriesContainer = document.getElementById('entries');
+
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'entry';
+                entryDiv.textContent = entryText;
+
+                entriesContainer.prepend(entryDiv);
+
+                document.getElementById('diaryEntry').value = '';
+                saveEntriesToLocalStorage();
+            }
+        }
+
+        function saveEntriesToLocalStorage() {
+            const entries = [];
+            document.querySelectorAll('.entry').forEach(entry => {
+                entries.push(entry.textContent);
+            });
+            localStorage.setItem('diaryEntries', JSON.stringify(entries));
+        }
+
+        function loadEntriesFromLocalStorage() {
+            const entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+            const entriesContainer = document.getElementById('entries');
+            entries.forEach(entryText => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'entry';
+                entryDiv.textContent = entryText;
+                entriesContainer.appendChild(entryDiv);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadEntriesFromLocalStorage);
+    </script>
+</body>
+</html>
